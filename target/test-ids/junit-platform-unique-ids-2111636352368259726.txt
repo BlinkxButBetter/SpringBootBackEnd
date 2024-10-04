@@ -1,1 +1,0 @@
-[engine:junit-jupiter]/[class:io.b3.B3ApplicationTests]/[method:contextLoads()]
