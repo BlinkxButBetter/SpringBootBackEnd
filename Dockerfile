@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM maven:3.8.7-openjdk-17 AS build
+FROM maven:3.8.7-openjdk-17-slim AS build
 LABEL authors="rohi"
 
 # Set working directory in container
@@ -16,7 +16,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Stage 2: Production stage
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-slim
 
 # Set working directory in the production container
 WORKDIR /app
