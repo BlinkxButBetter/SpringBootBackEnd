@@ -23,9 +23,9 @@ public class ImageService {
         InputStream inputStream = file.getInputStream();
 
         // Set content type as "image/*"
-        String contentType = "image/jpeg"; // or a specific type like "image/png", "image/jpeg", etc.
+//        String contentType = "image/jpeg"; // or a specific type like "image/png", "image/jpeg", etc.
 
-        ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), contentType);
+        ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), file.getContentType());
         return fileId.toString();  // Return the file ID as a reference
     }
 
