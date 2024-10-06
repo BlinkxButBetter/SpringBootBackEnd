@@ -17,17 +17,28 @@ public class ImageService {
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
-    // Method to store the image
+    // Method to store the image, setting content type as "image/*"
     public String storeImage(MultipartFile file) throws IOException {
         // Get the file input stream and save it using GridFS
         InputStream inputStream = file.getInputStream();
-        ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), file.getContentType());
+
+        // Set content type as "image/*"
+        String contentType = "image/jpeg"; // or a specific type like "image/png", "image/jpeg", etc.
+
+        ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), contentType);
         return fileId.toString();  // Return the file ID as a reference
     }
 
     // Method to retrieve the image by file ID
     public GridFsResource getImage(String fileId) throws IOException {
-        GridFSFile gridFSFile = gridFsTemplate.findOne(new org.springframework.data.mongodb.core.query.Query(org.springframework.data.mongodb.core.query.Criteria.where("_id").is(fileId)));
+        GridFSFile gridFSFile = gridFsTemplate.findOne(
+                new org.springframework.data.mongodb.core.query.Query(
+                        org.springframework.data.mongodb.core.query.Criteria.where("_id").is(new ObjectId(fileId))));
+
+        if (gridFSFile == null) {
+            throw new IOException("No file found with the given ID: " + fileId);
+        }
+
         return gridFsTemplate.getResource(gridFSFile);
     }
 }
