@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,12 @@ public class ImageService {
 //        String contentType = "image/jpeg"; // or a specific type like "image/png", "image/jpeg", etc.
 
         ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), file.getContentType());
-        return fileId.toString();  // Return the file ID as a reference
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/images/get/")
+                .path(fileId.toString())
+                .path("/")
+                .toUriString();
+        return fileDownloadUri;  // Return the file ID as a reference
     }
 
     // Method to retrieve the image by file ID

@@ -26,14 +26,10 @@ public class ImageController {
         String fileId = imageService.storeImage(file);  // Store the image and get its ID
 
         // Generate the URL for the uploaded image
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/images/get/")
-                .path(fileId)
-                .path("/")
-                .toUriString();
+
 
         // Return the URL as the response
-        return ResponseEntity.ok(fileDownloadUri);
+        return ResponseEntity.ok(fileId);
     }
 
     // Endpoint to download an image

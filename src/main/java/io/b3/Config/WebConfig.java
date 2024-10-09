@@ -1,18 +1,18 @@
 package io.b3.Config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")  // Allow CORS for all endpoints
-//                .allowedOrigins("*")  // Allow all origins
-//                .allowedMethods("*")  // Allow all HTTP methods (GET, POST, etc.)
-//                .allowedHeaders("*")  // Allow all headers
-//                .allowCredentials(true);  // Allow credentials (cookies, authorization headers)
-//    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:8000") // Change to the origin of your requests
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
 }
