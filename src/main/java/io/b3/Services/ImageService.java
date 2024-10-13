@@ -1,4 +1,4 @@
-package io.b3.Models;
+package io.b3.Services;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.bson.types.ObjectId;

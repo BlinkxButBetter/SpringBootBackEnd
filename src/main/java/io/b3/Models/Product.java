@@ -8,15 +8,17 @@ import java.util.List;
 @Document(collection = "products")
 public class Product {
     @Id
-    private String id; // You can auto-generate this
-    private String userId;
-    private String productName;
+    private String id;
+    private String userId; // The ID of the user who uploaded the product
+    private String name;
     private String description;
     private String category;
     private double basePrice;
     private List<String> imageUrls; // List of image URLs
+    private double highestBid; // Current highest bid amount
 
-    // Getters and Setters
+    // Getters and setters
+
     public String getId() {
         return id;
     }
@@ -33,12 +35,12 @@ public class Product {
         this.userId = userId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getName() {
+        return name;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -71,5 +73,17 @@ public class Product {
 
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+
+    public double getHighestBid() {
+        return highestBid;
+    }
+
+    public void setHighestBid(double highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    public void setProductName(String productName) {
+        this.name = productName;
     }
 }
