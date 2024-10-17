@@ -9,6 +9,7 @@ public class User {
     private String id;
     private String username;
     private String password; // You should hash this
+    private String contact;
 
     // Getters and Setters
     public String getId() {
@@ -34,5 +35,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 }

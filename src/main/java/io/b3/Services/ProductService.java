@@ -2,6 +2,7 @@ package io.b3.Services;
 
 import io.b3.Models.Bid;
 import io.b3.Models.Product;
+import io.b3.Models.User;
 import io.b3.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class ProductService {
 
     @Autowired
     private BidService bidService;
+
+    @Autowired
+    private UserService userService;
 
     public Product uploadProduct(Product product) {
         return productRepository.save(product); // Save the product in the database
@@ -41,6 +45,14 @@ public class ProductService {
     }
 
     public Optional<Product> getProductById(String id) {
-        return Optional.empty();
+        return productRepository.findById(id);
+    }
+
+    public Optional<User> getUserById(String userId) {
+        return userService.getUserById(userId);  // Assuming UserService provides this method
+    }
+
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 }

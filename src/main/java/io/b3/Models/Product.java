@@ -16,6 +16,7 @@ public class Product {
     private double basePrice;
     private List<String> imageUrls; // List of image URLs
     private double highestBid; // Current highest bid amount
+    private String status;
 
     // Getters and setters
 
@@ -85,5 +86,17 @@ public class Product {
 
     public void setProductName(String productName) {
         this.name = productName;
+    }
+
+    public double getMaxPrice() {
+        return basePrice * 1.5;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

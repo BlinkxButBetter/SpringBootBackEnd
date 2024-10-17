@@ -1,18 +1,19 @@
 package io.b3.Controllers;
 
-import io.b3.Models.Bid;
-import io.b3.Models.ProductResponse;
+import io.b3.Models.*;
 import io.b3.Repositories.ProductRepository;
 import io.b3.Services.ImageService;
-import io.b3.Models.Product;
 import io.b3.Services.ProductService;
+import io.b3.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -43,6 +44,7 @@ public class ProductController {
         product.setDescription(description);
         product.setCategory(category);
         product.setBasePrice(basePrice);
+        product.setStatus("OnGoing");
 
         // Upload images and store their URLs
         List<String> imageUrls = new ArrayList<>();
@@ -68,8 +70,12 @@ public class ProductController {
         // Fetch products from the repository
         List<Product> products = productRepository.findAll();
 
+        int prod_len = products.size();
+        Random rn = new Random();
+
         // Create the hero product (you can modify the logic to select which product is the hero)
-        Product heroProduct = products.isEmpty() ? null : products.get(0); // Example logic for hero product
+        Product heroProduct = products.isEmpty() ? null : products.get(rn.nextInt(prod_len)); // Example logic for hero product
+
 
         // Create the ProductResponse object
         ProductResponse response = new ProductResponse();
@@ -112,10 +118,82 @@ public class ProductController {
         return ResponseEntity.ok(savedBid);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable String id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable String id) {
+        Optional<Product> productOptional = productService.getProductById(id);
+
+        if (productOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Product product = productOptional.get();
+
+        // Build the product response with constant alt_text
+        Map<String, Object> response = new HashMap<>();
+
+        // Product details
+        Map<String, Object> productDetails = new HashMap<>();
+        productDetails.put("id", product.getId());
+        productDetails.put("name", product.getName());
+        productDetails.put("description", product.getDescription());
+        productDetails.put("base_price", product.getBasePrice());
+        productDetails.put("max_price", product.getMaxPrice());  // 50% more than base price
+        productDetails.put("current_price", product.getHighestBid());  // Highest bid is the current price
+
+        // Image list with constant alt_text
+        List<Map<String, String>> images = new ArrayList<>();
+        for (String url : product.getImageUrls()) {
+            Map<String, String> image = new HashMap<>();
+            image.put("url", url);
+            image.put("alt_text", "Product Image");  // Constant alt text
+            images.add(image);
+        }
+        productDetails.put("images", images);
+        productDetails.put("status", product.getStatus());
+
+        // Seller details (assuming the product's userId matches the seller's ID)
+        Optional<User> sellerOptional = userService.getUserById(product.getUserId());
+        if (sellerOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User seller = sellerOptional.get();
+
+        Map<String, Object> sellerDetails = new HashMap<>();
+        sellerDetails.put("id", seller.getId());
+        sellerDetails.put("name", seller.getUsername());
+        sellerDetails.put("contact", seller.getContact());
+
+        // Combine product and seller details into the final response
+        response.put("product", productDetails);
+        response.put("seller", sellerDetails);
+
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{productId}/{sellerId}/accept")
+    public ResponseEntity<String> acceptProductSale(
+            @PathVariable String productId,
+            @PathVariable String sellerId) {
+
+        Optional<Product> productOptional = productService.getProductById(productId);
+
+        if (productOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+        }
+
+        Product product = productOptional.get();
+
+        // Verify if the seller is authorized
+        if (!product.getUserId().equals(sellerId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Seller not authorized.");
+        }
+
+        // Update the product status to "Over"
+        product.setStatus("Over");
+        productService.saveProduct(product);  // Save the updated product
+
+        return ResponseEntity.ok("Product sale marked as 'Over'.");
     }
 }
