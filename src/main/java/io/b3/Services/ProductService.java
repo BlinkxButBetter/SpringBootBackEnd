@@ -23,14 +23,12 @@ public class ProductService {
     private UserService userService;
 
     public Product uploadProduct(Product product) {
-        return productRepository.save(product); // Save the product in the database
+        return productRepository.save(product);
     }
 
     public Bid placeBid(String productId, Bid bid) {
-        // Save the bid
         Bid savedBid = bidService.placeBid(bid);
 
-        // Update the product's highest bid if this bid is higher
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
         if (savedBid.getBidAmount() > product.getHighestBid()) {
             product.setHighestBid(savedBid.getBidAmount());
@@ -41,7 +39,7 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll(); // Fetch all products
+        return productRepository.findAll();
     }
 
     public Optional<Product> getProductById(String id) {
@@ -49,7 +47,7 @@ public class ProductService {
     }
 
     public Optional<User> getUserById(String userId) {
-        return userService.getUserById(userId);  // Assuming UserService provides this method
+        return userService.getUserById(userId);
     }
 
     public void saveProduct(Product product) {

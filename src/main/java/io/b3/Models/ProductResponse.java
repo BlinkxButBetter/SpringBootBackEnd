@@ -30,7 +30,6 @@ public class ProductResponse {
         private double curPrice;
         private List<String> preview;
 
-        // Getters and setters
         public String getId() {
             return id;
         }

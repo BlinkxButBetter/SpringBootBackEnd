@@ -10,7 +10,6 @@ public class Cart {
     private String userId;
     private List<String> productIds;
 
-    // Getters and Setters
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 

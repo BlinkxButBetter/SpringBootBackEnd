@@ -7,12 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Bid {
     @Id
     private String id;
-    private String productId; // The ID of the product being bid on
-    private String sellerId;  // The ID of the seller
-    private String bidderId;  // The ID of the bidder
-    private double bidAmount;  // The bid amount
-
-    // Getters and setters
+    private String productId;
+    private String sellerId;
+    private String bidderId;
+    private double bidAmount;
 
     public String getId() {
         return id;

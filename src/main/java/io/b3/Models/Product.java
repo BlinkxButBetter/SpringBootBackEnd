@@ -9,16 +9,14 @@ import java.util.List;
 public class Product {
     @Id
     private String id;
-    private String userId; // The ID of the user who uploaded the product
+    private String userId;
     private String name;
     private String description;
     private String category;
     private double basePrice;
-    private List<String> imageUrls; // List of image URLs
-    private double highestBid; // Current highest bid amount
+    private List<String> imageUrls;
+    private double highestBid;
     private String status;
-
-    // Getters and setters
 
     public String getId() {
         return id;

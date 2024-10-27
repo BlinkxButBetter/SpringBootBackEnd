@@ -3,6 +3,8 @@ package io.b3.Services;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,10 @@ public class ImageService {
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
-    // Method to store the image, setting content type as "image/*"
-    public String storeImage(MultipartFile file) throws IOException {
-        // Get the file input stream and save it using GridFS
-        InputStream inputStream = file.getInputStream();
 
-        // Set content type as "image/*"
-//        String contentType = "image/jpeg"; // or a specific type like "image/png", "image/jpeg", etc.
+    public String storeImage(MultipartFile file) throws IOException {
+
+        InputStream inputStream = file.getInputStream();
 
         ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), file.getContentType());
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -32,10 +31,9 @@ public class ImageService {
                 .path(fileId.toString())
                 .path("/")
                 .toUriString();
-        return fileDownloadUri;  // Return the file ID as a reference
+        return fileDownloadUri;
     }
 
-    // Method to retrieve the image by file ID
     public GridFsResource getImage(String fileId) throws IOException {
         GridFSFile gridFSFile = gridFsTemplate.findOne(
                 new org.springframework.data.mongodb.core.query.Query(
@@ -43,6 +41,16 @@ public class ImageService {
 
         if (gridFSFile == null) {
             throw new IOException("No file found with the given ID: " + fileId);
+        }
+
+        return gridFsTemplate.getResource(gridFSFile);
+    }
+    public GridFsResource getFileByName(String filename) throws IOException {
+        // Find the file by its filename
+        GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("filename").is(filename)));
+
+        if (gridFSFile == null) {
+            throw new IOException("No file found with the given filename: " + filename);
         }
 
         return gridFsTemplate.getResource(gridFSFile);

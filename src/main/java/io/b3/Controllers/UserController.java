@@ -16,11 +16,10 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private SecurityService securityService; // Inject SecurityService
+    private SecurityService securityService;
 
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody User user) {
-        // Hash the password before saving
         user.setPassword(securityService.hashPassword(user.getPassword()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
@@ -29,7 +28,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
         User foundUser = userRepository.findByUsername(user.getUsername());
-        // Check if the user is found and the password matches
         if (foundUser != null && securityService.checkPassword(user.getPassword(), foundUser.getPassword())) {
             return ResponseEntity.ok(foundUser);
         } else {

@@ -18,15 +18,15 @@ public class CartService {
     }
 
     public List<Product> getCartProducts(String userId) {
-        // Fetch the cart for the given userId
+
         Optional<Cart> cart = cartRepository.findByUserId(userId);
 
         if (cart.isPresent()) {
-            // Retrieve product details using product IDs from the cart
+
             List<String> productIds = cart.get().getProductIds();
             return productRepository.findByIdIn(productIds);
         }
-        return List.of(); // Return empty list if cart not found
+        return List.of();
     }
 
     public void addProductToCart(String userId, String productId) {
@@ -37,19 +37,17 @@ public class CartService {
             cart = optionalCart.get();
             List<String> productIds = cart.getProductIds();
 
-            // Add product ID if it's not already in the list
+
             if (!productIds.contains(productId)) {
                 productIds.add(productId);
                 cart.setProductIds(productIds);
             }
         } else {
-            // Create a new cart if it doesn't exist
             cart = new Cart();
             cart.setUserId(userId);
             cart.setProductIds(List.of(productId));
         }
 
-        // Save the updated or new cart
         cartRepository.save(cart);
     }
 }

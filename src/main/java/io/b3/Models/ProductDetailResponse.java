@@ -33,7 +33,6 @@ public class ProductDetailResponse {
         private String status;
         private List<ImageDetail> images;
 
-        // Getters and setters
 
         public String getId() { return id; }
         public void setId(String id) { this.id = id; }
@@ -65,7 +64,6 @@ public class ProductDetailResponse {
         private String name;
         private String contact;
 
-        // Getters and setters
 
         public String getId() { return id; }
         public void setId(String id) { this.id = id; }
@@ -81,7 +79,6 @@ public class ProductDetailResponse {
         private String url;
         private String altText;
 
-        // Getters and setters
 
         public String getUrl() { return url; }
         public void setUrl(String url) { this.url = url; }

@@ -8,10 +8,9 @@ public class User {
     @Id
     private String id;
     private String username;
-    private String password; // You should hash this
+    private String password;
     private String contact;
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
