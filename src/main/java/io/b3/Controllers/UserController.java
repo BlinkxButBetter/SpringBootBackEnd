@@ -33,7 +33,8 @@ public class UserController {
     public ResponseEntity<User> login(@RequestBody User user, @RequestParam String to) {
         User foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser != null && securityService.checkPassword(user.getPassword(), foundUser.getPassword())) {
-            emailService.sendEmail(to, "B^3 Notification alert",user.getUsername()+"\nThe Above mentioned userName of ours is currently logged in");
+            emailService.sendEmail(to, "B^3 Notification alert",user.getUsername()+"\nThe Above mentioned userName of ours is currently in");
+
             return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
