@@ -2,6 +2,7 @@ package io.b3.Controllers;
 
 import io.b3.Models.User;
 import io.b3.Repositories.UserRepository;
+import io.b3.Services.EmailService;
 import io.b3.Services.SecurityService; // Import the SecurityService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody User user) {
         user.setPassword(securityService.hashPassword(user.getPassword()));
@@ -26,10 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user, @RequestParam String to) {
         User foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser != null && securityService.checkPassword(user.getPassword(), foundUser.getPassword())) {
-
+            emailService.sendEmail(to, "B^3 Notification alert",user.getUsername()+"\nThe Above mentioned userName of ours is currently logged in");
             return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
