@@ -29,6 +29,7 @@ public class UserController {
     public ResponseEntity<User> login(@RequestBody User user) {
         User foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser != null && securityService.checkPassword(user.getPassword(), foundUser.getPassword())) {
+
             return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -20,7 +20,6 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-
     @PostMapping("/images/uploads")
     public ResponseEntity<ArrayList<String>> uploadImage(
             @RequestParam("files") MultipartFile[] files ) throws IOException {
@@ -51,7 +50,7 @@ public class ImageController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(resource.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")  // Set to inline for viewing
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource.getInputStream().readAllBytes());
     }
 
