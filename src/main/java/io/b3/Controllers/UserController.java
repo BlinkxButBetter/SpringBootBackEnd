@@ -30,10 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user, @RequestParam String to) {
+    public ResponseEntity<User> login(@RequestBody User user, @RequestParam String to, @RequestParam String lat, @RequestParam String lon) {
         User foundUser = userRepository.findByUsername(user.getUsername());
         if (foundUser != null && securityService.checkPassword(user.getPassword(), foundUser.getPassword())) {
-            emailService.sendEmail(to, "B^3 Notification alert",user.getUsername()+"\nThe Above mentioned userName of ours is currently logged in");
+            emailService.sendEmail(to, "B^3 Notification alert",user.getUsername()+"\nThe Above mentioned userName of ours is currently logged at the location\nLongitute : "+lon+"\nLatitute : "+lat);
             return ResponseEntity.ok(foundUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
