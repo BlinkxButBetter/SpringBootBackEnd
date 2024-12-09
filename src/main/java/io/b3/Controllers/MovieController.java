@@ -1,7 +1,8 @@
 package io.b3.Controllers;
 
-import io.b3.Models.MovieRepository;
 import io.b3.Models.Movie;
+import io.b3.Repositories.MovieRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
